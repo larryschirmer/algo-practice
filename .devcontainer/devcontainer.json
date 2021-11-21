@@ -43,6 +43,7 @@
 		"ms-toolsai.jupyter",
 		"ms-toolsai.jupyter-keymap",
 		"wallabyjs.quokka-vscode",
+		"esbenp.prettier-vscode"
 		
 	],
 
