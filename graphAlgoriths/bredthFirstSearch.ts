@@ -1,17 +1,23 @@
-const bredthFirstSearch = (graph: { [key: string]: string[] }, start: string) => {
+const bredthFirstSearch = (graph: { [key: string]: string[] }, start: string, end?: string) => {
   const queue: string[] = [start];
 
   while (queue.length) {
     const node = queue.shift();
     console.log(node);
 
+    if (node === end) {
+      return true;
+    }
+
     for (let neighbor of graph[node]) {
       queue.push(neighbor);
     }
   }
+
+  return false;
 };
 
-const adjecencyList = {
+const adjacencyList = {
   a: ['b', 'c'],
   b: ['d'],
   c: ['e'],
@@ -20,4 +26,4 @@ const adjecencyList = {
   f: [],
 };
 
-bredthFirstSearch(adjecencyList, 'a');
+bredthFirstSearch(adjecancyList, 'a', 'g'); //?
