@@ -6,11 +6,6 @@ const island = [
   [1, 0, 1, 0, 1],
 ];
 
-const miniIsland = [
-  [1, 1],
-  [0, 1],
-];
-
 const connectedComponents = (island: number[][]) => {
   let visited = island;
   let count = 0;
@@ -50,4 +45,4 @@ const connectedComponents = (island: number[][]) => {
   return count;
 };
 
-connectedComponents(island); //?
+connectedComponents(island);
