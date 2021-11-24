@@ -40,8 +40,8 @@ const minimumIsland = (grid: number[][]): number => {
   };
 
   // Loop through the grid
-  for (let rowIdx = 0; rowIdx < grid.length; rowIdx++) {
-    for (let colIdx = 0; colIdx < grid[0].length; colIdx++) {
+  for (let [rowIdx, row] of grid.entries()) {
+    for (let [colIdx] of row.entries()) {
       // If the node is not visited and is an island
       if (!isVisited(rowIdx, colIdx) && grid[rowIdx][colIdx] === 1) {
         // Add the node to the queue
