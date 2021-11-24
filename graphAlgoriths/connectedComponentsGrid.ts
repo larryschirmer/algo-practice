@@ -1,42 +1,35 @@
-const island = [
-  [1, 1, 0, 0, 0],
-  [0, 1, 0, 0, 1],
-  [1, 0, 0, 1, 1],
-  [0, 0, 0, 0, 0],
-  [1, 0, 1, 0, 1],
-];
-
-const connectedComponents = (island: number[][]) => {
-  let visited = island;
+const connectedComponents = (grid: number[][]) => {
+  let visited = new Set<string>();
+  const isVisited = (x: number, y: number) => visited.has(`${x},${y}`);
   let count = 0;
 
-  const stack: number[][] = [];
+  if (grid.length === 0 || grid[0].length === 0) return count;
+  const stack: [number, number][] = [];
 
-  const exploreStack = () => {
-    while(stack.length) {
-      const [x, y] = stack.pop();
-      if (visited?.[x]?.[y] === 1) {
-        visited[x][y] = 0;
-        stack.push([x - 1, y]);
-        stack.push([x, y + 1]);
-        stack.push([x + 1, y]);
-        stack.push([x, y - 1]);
-      }
-    }
-  }
-
-  for (let rowIdx = 0; rowIdx < island.length; rowIdx++) {
-    for (let colIdx = 0; colIdx < island[rowIdx].length; colIdx++) {
-      // if not visited and not a wall
-      if (island[rowIdx][colIdx] === 1) {
+  for (let [rowIdx, row] of grid.entries()) {
+    for (let [colIdx] of row.entries()) {
+      // if not visited and not 0
+      if (!isVisited(rowIdx,colIdx) && grid[rowIdx]?.[colIdx] === 1) {
         // mark as visited
-        visited[rowIdx][colIdx] = 0;
-        // push all neghbours to stack
+        visited.add(`${rowIdx} ${colIdx}`);
+
+        // push to stack
         stack.push([rowIdx - 1, colIdx]);
         stack.push([rowIdx, colIdx + 1]);
         stack.push([rowIdx + 1, colIdx]);
         stack.push([rowIdx, colIdx - 1]);
-        exploreStack();
+
+        // while stack is not empty explore neighbors
+        while (stack.length) {
+          const [x, y] = stack.pop();
+          if (!visited.has(`${x},${y}`) && grid[x]?.[y] === 1) {
+            visited.add(`${x},${y}`);
+            stack.push([x - 1, y]);
+            stack.push([x, y + 1]);
+            stack.push([x + 1, y]);
+            stack.push([x, y - 1]);
+          }
+        }
         count++;
       }
     }
@@ -45,4 +38,12 @@ const connectedComponents = (island: number[][]) => {
   return count;
 };
 
-connectedComponents(island);
+const grid = [
+  [1, 1, 0, 0, 0],
+  [0, 1, 0, 0, 1],
+  [1, 0, 0, 1, 1],
+  [0, 0, 0, 0, 0],
+  [1, 0, 1, 0, 1],
+];
+
+connectedComponents(grid); //?
