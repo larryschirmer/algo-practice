@@ -6,10 +6,10 @@ const connectedComponents = (grid: number[][]) => {
   if (grid.length === 0 || grid[0].length === 0) return count;
   const stack: [number, number][] = [];
 
-  for (let [rowIdx, row] of grid.entries()) {
-    for (let [colIdx] of row.entries()) {
+  for (let rowIdx = 0; rowIdx < grid.length; rowIdx++) {
+    for (let colIdx = 0; colIdx < grid[0].length; colIdx++) {
       // if not visited and not 0
-      if (!isVisited(rowIdx,colIdx) && grid[rowIdx]?.[colIdx] === 1) {
+      if (!isVisited(rowIdx, colIdx) && grid[rowIdx]?.[colIdx] === 1) {
         // mark as visited
         visited.add(`${rowIdx} ${colIdx}`);
 
