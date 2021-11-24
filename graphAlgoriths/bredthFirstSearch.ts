@@ -17,7 +17,7 @@ const bredthFirstSearch = (graph: { [key: string]: string[] }, start: string, en
   return false;
 };
 
-const adjacencyList = {
+const adjList = {
   a: ['b', 'c'],
   b: ['d'],
   c: ['e'],
@@ -26,4 +26,4 @@ const adjacencyList = {
   f: [],
 };
 
-bredthFirstSearch(adjecancyList, 'a', 'g'); //?
+bredthFirstSearch(adjList, 'a', 'g'); //?

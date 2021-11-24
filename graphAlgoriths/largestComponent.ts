@@ -44,7 +44,7 @@ const largestComponent = (graph: Graph): number => {
   return largest;
 };
 
-const adjacencyList = {
+const graph = {
   0: [1, 8],
   1: [0],
   2: [3, 4],
@@ -56,4 +56,4 @@ const adjacencyList = {
   8: [0, 5],
 } as Graph;
 
-largestComponent(adjacencyList); //?
+largestComponent(graph); //?
