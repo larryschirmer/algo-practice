@@ -1,9 +1,9 @@
 class Node {
-  val: string;
+  val: string | number;
   left: Node;
   right: Node;
 
-  constructor(val: string) {
+  constructor(val: string | number) {
     this.val = val;
     this.left = null;
     this.right = null;
