@@ -5,25 +5,48 @@ const assert = (isTrue: boolean): Error | void => {
 };
 
 type Hand = [string, string, string, string, string];
+const values = '23456789TJQKA';
+
+const isInHand = (value: string) => (card: string) => {
+  if (card === '10') return 'T' === value;
+  return card === value;
+};
+
+const cardValue = (card: string) => {
+  if (card === '10') return values.indexOf('T');
+  return values.indexOf(card);
+};
 
 const playHand = (hands: Hand[]): number => {
-  const values = '23456789TJQKA';
-
   let bestofHands = [];
 
   hands.forEach((hand, handIdx) => {
     // high card
-    let highCard = Math.max(...hand.map((card) => values.indexOf(card)));
+    let highCard = Math.max(...hand.map(cardValue));
     bestofHands[handIdx] = highCard;
 
     // best pair
     let bestPair = values.split('').reduce<number>((pairVal, value) => {
-      const instancesOfValue = hand.filter((card) => card === value).length;
-
-      if (instancesOfValue >= 2) return values.indexOf(value);
+      const instancesOfValue = hand.filter(isInHand(value)).length;
+      if (instancesOfValue >= 2) return cardValue(value);
       return pairVal;
     }, 0);
-    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2
+    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2;
+
+    // best two pair
+    let bestTwoPair = values.split('').reduce<[number, number]>(
+      (pairVal, value) => {
+        const instancesOfValue = hand.filter(isInHand(value)).length;
+        if (instancesOfValue >= 2) {
+          const [, secondBest] = pairVal;
+          return [secondBest, cardValue(value)];
+        }
+        return pairVal;
+      },
+      [0, 0],
+    );
+    if (bestTwoPair.every((val) => val !== 0))
+      bestofHands[handIdx] = bestTwoPair.reduce((sum, val) => sum + val * 2, 0);
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
