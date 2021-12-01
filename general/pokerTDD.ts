@@ -18,6 +18,7 @@ const cardValue = (card: string) => {
 };
 
 const playHand = (hands: Hand[]): number => {
+  const cardValues = values.split('');
   let bestofHands = [];
 
   hands.forEach((hand, handIdx) => {
@@ -26,20 +27,20 @@ const playHand = (hands: Hand[]): number => {
     bestofHands[handIdx] = highCard;
 
     // best pair
-    let bestPair = values.split('').reduce<number>((pairVal, value) => {
+    let bestPair = cardValues.reduce<number>((pairVal, value) => {
       const instancesOfValue = hand.filter(isInHand(value)).length;
-      if (instancesOfValue >= 2) return cardValue(value);
+      if (instancesOfValue >= 2) return values.indexOf(value);
       return pairVal;
     }, 0);
     if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2 * 10;
 
     // best two pair
-    let bestTwoPair = values.split('').reduce<[number, number]>(
+    let bestTwoPair = cardValues.reduce<[number, number]>(
       (pairVal, value) => {
         const instancesOfValue = hand.filter(isInHand(value)).length;
         if (instancesOfValue >= 2) {
           const [, secondBest] = pairVal;
-          return [secondBest, cardValue(value)];
+          return [secondBest, values.indexOf(value)];
         }
         return pairVal;
       },
@@ -49,16 +50,29 @@ const playHand = (hands: Hand[]): number => {
       bestofHands[handIdx] = bestTwoPair.reduce((sum, val) => sum + val * 2, 0) * 100;
 
     // best three of a kind
-    let bestThree = values.split('').reduce<number>((pairVal, value) => {
+    let bestThree = cardValues.reduce<number>((pairVal, value) => {
       const instancesOfValue = hand.filter(isInHand(value)).length;
-      if (instancesOfValue >= 3) return cardValue(value);
+      if (instancesOfValue >= 3) return values.indexOf(value);
       return pairVal;
     }, 0);
-    if (bestThree !== 0) bestofHands[handIdx] = bestThree * 3 * 1000;
+    if (bestThree !== 0) bestofHands[handIdx] = bestThree * 3 * 1_000;
+
+    // best straight
+    let bestStraight = 0;
+    const isStraight = hand
+      .map(cardValue)
+      .sort((a, b) => a - b)
+      .filter((val, valIdx, arr) => {
+        if (valIdx === arr.length - 1) return true;
+        return arr[valIdx + 1] - 1 === val;
+      });
+
+    if (isStraight.length === 5) bestStraight = isStraight[4];
+    if (bestStraight !== 0) bestofHands[handIdx] = bestStraight * 10_000;
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
-  return bestofHands.indexOf(Math.max(...bestofHands)); //?
+  return bestofHands.indexOf(Math.max(...bestofHands));
 };
 
 // tie
@@ -66,7 +80,7 @@ assert(
   playHand([
     ['A', '4', '5', '8', 'A'],
     ['4', '5', '8', 'A', 'A'],
-  ]) === -1, //?
+  ]) === -1,
 );
 
 // player 0 wins high card
@@ -74,7 +88,7 @@ assert(
   playHand([
     ['2', '4', '5', '8', 'A'],
     ['4', '5', '8', '3', 'Q'],
-  ]) === 0, //?
+  ]) === 0,
 );
 
 // player 1 wins pair
@@ -82,7 +96,7 @@ assert(
   playHand([
     ['2', '4', '5', '8', 'A'],
     ['Q', 'Q', '5', '3', 'T'],
-  ]) === 1, //?
+  ]) === 1,
 );
 
 // player 0 wins two pair
