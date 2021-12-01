@@ -15,6 +15,15 @@ const playHand = (hands: Hand[]): number => {
     // high card
     let highCard = Math.max(...hand.map((card) => values.indexOf(card)));
     bestofHands[handIdx] = highCard;
+
+    // best pair
+    let bestPair = values.split('').reduce<number>((pairVal, value) => {
+      const instancesOfValue = hand.filter((card) => card === value).length;
+
+      if (instancesOfValue >= 2) return values.indexOf(value);
+      return pairVal;
+    }, 0);
+    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
