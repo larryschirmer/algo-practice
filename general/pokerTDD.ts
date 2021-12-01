@@ -57,7 +57,7 @@ assert(
 // player 0 wins two pair
 assert(
   playHand([
-    ['7', 'A', 'J', 'A', 'J'],
+    ['7', '10', 'J', '10', 'J'],
     ['Q', 'Q', '5', '3', '10'],
   ]) === 0,
 );
