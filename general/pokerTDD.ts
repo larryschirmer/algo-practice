@@ -6,7 +6,20 @@ const assert = (isTrue: boolean): Error | void => {
 
 type Hand = [string, string, string, string, string];
 
-const playHand = (hands: Hand[]): number => {};
+const playHand = (hands: Hand[]): number => {
+  const values = '23456789TJQKA';
+
+  let bestofHands = [];
+
+  hands.forEach((hand, handIdx) => {
+    // high card
+    let highCard = Math.max(...hand.map((card) => values.indexOf(card)));
+    bestofHands[handIdx] = highCard;
+  });
+
+  if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
+  return bestofHands.indexOf(Math.max(...bestofHands)); //?
+};
 
 // tie
 assert(
@@ -28,7 +41,7 @@ assert(
 assert(
   playHand([
     ['2', '4', '5', '8', 'A'],
-    ['Q', 'Q', '5', '3', '10'],
+    ['Q', 'Q', '5', '3', 'T'],
   ]) === 1, //?
 );
 
