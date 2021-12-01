@@ -31,7 +31,7 @@ const playHand = (hands: Hand[]): number => {
       if (instancesOfValue >= 2) return cardValue(value);
       return pairVal;
     }, 0);
-    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2;
+    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2 * 10;
 
     // best two pair
     let bestTwoPair = values.split('').reduce<[number, number]>(
@@ -46,7 +46,15 @@ const playHand = (hands: Hand[]): number => {
       [0, 0],
     );
     if (bestTwoPair.every((val) => val !== 0))
-      bestofHands[handIdx] = bestTwoPair.reduce((sum, val) => sum + val * 2, 0);
+      bestofHands[handIdx] = bestTwoPair.reduce((sum, val) => sum + val * 2, 0) * 100;
+
+    // best three of a kind
+    let bestThree = values.split('').reduce<number>((pairVal, value) => {
+      const instancesOfValue = hand.filter(isInHand(value)).length;
+      if (instancesOfValue >= 3) return cardValue(value);
+      return pairVal;
+    }, 0);
+    if (bestThree !== 0) bestofHands[handIdx] = bestThree * 3 * 1000;
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
