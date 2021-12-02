@@ -5,7 +5,7 @@ const assert = (isTrue: boolean): Error | void => {
 };
 
 type Hand = [string, string, string, string, string];
-const values = '_23456789TJQKA';
+const values = '__23456789TJQKA';
 
 const isInHand = (value: string) => (card: string) => {
   if (card === '10') return 'T' === value;
@@ -51,10 +51,10 @@ const playHand = (hands: Hand[]): number => {
     if (bestTwoPair.every((val) => val !== 0)) bestofHands[handIdx] = sum(bestTwoPair) * 100;
 
     // best three of a kind
-    let bestThree = cardValues.reduce<number>((pairVal, value) => {
+    let bestThree = cardValues.reduce<number>((setVal, value) => {
       const instancesOfValue = hand.filter(isInHand(value)).length;
       if (instancesOfValue >= 3) return values.indexOf(value);
-      return pairVal;
+      return setVal;
     }, 0);
     if (bestThree !== 0) bestofHands[handIdx] = bestThree * 1_000;
 
@@ -83,6 +83,14 @@ const playHand = (hands: Hand[]): number => {
     }, {});
     if (Object.keys(bestFullHouse).length === 2)
       bestofHands[handIdx] = sum([bestFullHouse[3], bestFullHouse[2]]) * 100_000;
+
+    // best four of a kind
+    let bestFour = cardValues.reduce<number>((setVal, value) => {
+      const instancesOfValue = hand.filter(isInHand(value)).length;
+      if (instancesOfValue >= 4) return values.indexOf(value);
+      return setVal;
+    }, 0);
+    if (bestFour !== 0) bestofHands[handIdx] = bestFour * 1_000_000;
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
@@ -143,7 +151,7 @@ assert(
 // player 0 wins full house
 assert(
   playHand([
-    ['J', 'J', 'J', '8', '8'],
+    ['9', '9', '9', '8', '8'],
     ['8', 'J', '10', '9', 'Q'],
   ]) === 0,
 );
@@ -152,7 +160,7 @@ assert(
 assert(
   playHand([
     ['J', 'J', 'J', '8', '8'],
-    ['Q', 'Q', 'Q', 'Q', '4'],
+    ['2', '2', '2', '2', '4'],
   ]) === 1,
 );
 
