@@ -5,7 +5,7 @@ const assert = (isTrue: boolean): Error | void => {
 };
 
 type Hand = [string, string, string, string, string];
-const values = '23456789TJQKA';
+const values = '_23456789TJQKA';
 
 const isInHand = (value: string) => (card: string) => {
   if (card === '10') return 'T' === value;
@@ -16,6 +16,8 @@ const cardValue = (card: string) => {
   if (card === '10') return values.indexOf('T');
   return values.indexOf(card);
 };
+
+const sum = (numbers: number[]) => numbers.reduce((sum, val) => sum + val, 0);
 
 const playHand = (hands: Hand[]): number => {
   const cardValues = values.split('');
@@ -32,7 +34,7 @@ const playHand = (hands: Hand[]): number => {
       if (instancesOfValue >= 2) return values.indexOf(value);
       return pairVal;
     }, 0);
-    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 2 * 10;
+    if (bestPair !== 0) bestofHands[handIdx] = bestPair * 10;
 
     // best two pair
     let bestTwoPair = cardValues.reduce<[number, number]>(
@@ -46,8 +48,7 @@ const playHand = (hands: Hand[]): number => {
       },
       [0, 0],
     );
-    if (bestTwoPair.every((val) => val !== 0))
-      bestofHands[handIdx] = bestTwoPair.reduce((sum, val) => sum + val * 2, 0) * 100;
+    if (bestTwoPair.every((val) => val !== 0)) bestofHands[handIdx] = sum(bestTwoPair) * 100;
 
     // best three of a kind
     let bestThree = cardValues.reduce<number>((pairVal, value) => {
@@ -55,7 +56,7 @@ const playHand = (hands: Hand[]): number => {
       if (instancesOfValue >= 3) return values.indexOf(value);
       return pairVal;
     }, 0);
-    if (bestThree !== 0) bestofHands[handIdx] = bestThree * 3 * 1_000;
+    if (bestThree !== 0) bestofHands[handIdx] = bestThree * 1_000;
 
     // best straight
     let bestStraight = 0;
@@ -66,9 +67,22 @@ const playHand = (hands: Hand[]): number => {
         if (valIdx === arr.length - 1) return true;
         return arr[valIdx + 1] - 1 === val;
       });
-
     if (isStraight.length === 5) bestStraight = isStraight[4];
     if (bestStraight !== 0) bestofHands[handIdx] = bestStraight * 10_000;
+
+    // best full house - best three and two of a kind
+    let bestFullHouse = cardValues.reduce<{ [key: number]: number }>((combinations, value) => {
+      const instancesOfValue = hand.filter(isInHand(value)).length;
+
+      if (instancesOfValue === 3 && combinations[3] === undefined)
+        combinations[3] = values.indexOf(value);
+      if (instancesOfValue === 2 && combinations[2] === undefined)
+        combinations[2] = values.indexOf(value);
+
+      return combinations;
+    }, {});
+    if (Object.keys(bestFullHouse).length === 2)
+      bestofHands[handIdx] = sum([bestFullHouse[3], bestFullHouse[2]]) * 100_000;
   });
 
   if (bestofHands.every((hand) => bestofHands[0] === hand)) return -1;
