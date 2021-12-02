@@ -1,3 +1,4 @@
+// https://www.pokernews.com/poker-rules/texas-holdem.htm
 export {};
 
 const assert = (isTrue: boolean): Error | void => {
