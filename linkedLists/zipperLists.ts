@@ -11,50 +11,27 @@ class Node {
 }
 
 const zipperLists = (head1: Node, head2: Node) => {
-  let headCur1: Node | null = head1;
-  let headCur2: Node | null = head2;
-  let headNxt1: Node | null = head1.next;
-  let headNxt2: Node | null = head2.next;
-  let head: Node | null = headCur1;
-  let tail: Node | null = head;
+  let tail = head1;
+  let current1: Node | null = head1.next;
+  let current2: Node | null = head2;
+  let idx = 0;
 
-  while (
-    tail !== null &&
-    headCur1 !== null &&
-    headCur1.next !== null &&
-    headCur2 !== null &&
-    headCur2.next !== null
-  ) {
-    tail.next === headCur2;
-    tail //?
-    tail = tail.next
-    if (tail) tail.next === headNxt1;
-    tail //?
-    if (tail) tail = tail.next
-    
-    headCur1 = headNxt1;
-    headCur2 = headNxt2;
-    headNxt1 = headCur1?.next ?? null;
-    headNxt2 = headCur2?.next ?? null;
+  while (current1 !== null && current2 !== null) {
+    if (idx % 2 === 0) {
+      tail.next = current2;
+      current2 = current2.next;
+    } else {
+      tail.next = current1;
+      current1 = current1.next;
+    }
+    tail = tail.next;
+    idx++;
   }
-  head //?
-  tail //?
 
+  if (current1 !== null) tail.next = current1
+  if (current2 !== null) tail.next = current2
 
-  if (headCur1 !== null && headCur1.next === null && headCur2 !== null && headCur2.next === null) {
-    headCur1.next === headCur2;
-    headCur2.next === headNxt1;
-    return head1;
-  }
-  if (headCur1 !== null && headCur1.next === null && headCur2 !== null && headCur2.next !== null) {
-    headCur1.next === headCur2;
-    return head1;
-  }
-  if (headCur1 !== null && headCur1.next !== null && headCur2 !== null && headCur2.next === null) {
-    headCur1.next === headCur2;
-    headCur2.next === headNxt1;
-    return head1;
-  }
+  return head1;
 };
 
 const a = new Node('a');
@@ -71,5 +48,5 @@ x.next = y;
 y.next = z;
 // x -> y -> z
 
-zipperLists(a, x);
+zipperLists(a, x); //?
 // a -> x -> b -> y -> c -> z
